@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
+import QuickJump from './components/QuickJump';
 import Hero from './components/Hero';
 import TrustBar from './components/TrustBar';
 import OfferSection from './components/OfferSection';
@@ -130,6 +131,9 @@ export default function App() {
         onAdminLogout={handleAdminLogout}
       />
 
+      {/* Mobile-only Quick Jump Visual Chapters Navigation */}
+      <QuickJump />
+
       {/* Main Page Layout Content Flow */}
       <main className="flex-grow">
         
@@ -137,6 +141,7 @@ export default function App() {
         <Hero 
           onOpenBooking={() => handleOpenBooking()} 
           heroImage={clinicInteriorImg}
+          activePatient={activePatient}
         />
 
         {/* Section 2: Floating trust bar values */}

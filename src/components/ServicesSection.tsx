@@ -13,11 +13,6 @@ interface ServicesSectionProps {
 export default function ServicesSection({ onOpenBooking }: ServicesSectionProps) {
   const [expandedServiceId, setExpandedServiceId] = useState<string | null>(null);
 
-  const toggleDetails = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedServiceId(prev => (prev === id ? null : id));
-  };
-
   // Helper to map icon names to Lucide icons
   const getIcon = (name: string, isBig: boolean) => {
     const sizeClass = isBig ? "w-6 h-6 text-sky-500" : "w-5 h-5 text-sky-500";
@@ -68,8 +63,7 @@ export default function ServicesSection({ onOpenBooking }: ServicesSectionProps)
               <div
                 id={`service-card-${s.id}`}
                 key={s.id}
-                onClick={() => onOpenBooking(s.id)}
-                className={`group text-right bg-white border border-slate-100/80 rounded-[28px] p-6 sm:p-8 hover:shadow-xl hover:border-slate-200 transition-all duration-300 relative overflow-hidden flex flex-col justify-between cursor-pointer ${
+                className={`group text-right bg-white border border-slate-100/80 rounded-[28px] p-6 sm:p-8 hover:shadow-lg hover:border-slate-200 transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${
                   isFeatured 
                     ? 'md:col-span-12 lg:col-span-6 shadow-md shadow-slate-100/40' 
                     : 'md:col-span-6 lg:col-span-4'
@@ -103,28 +97,15 @@ export default function ServicesSection({ onOpenBooking }: ServicesSectionProps)
                   </div>
                 </div>
 
-                {/* Interactive expandable details block */}
+                {/* Details block */}
                 <div className="mt-6 border-t border-slate-100 pt-4">
-                  <button
-                    id={`btn-toggle-service-details-${s.id}`}
-                    type="button"
-                    onClick={(e) => toggleDetails(s.id, e)}
-                    className="w-full flex items-center justify-between text-xs text-sky-600 hover:text-sky-700 font-bold py-1 focus:outline-none"
-                  >
-                    <span className="flex items-center gap-1">
-                      <Info className="w-4 h-4" />
-                      {isExpanded ? 'إخفاء التفاصيل العلاجية' : 'عرض مميزات التقنية والمواد'}
-                    </span>
-                    <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
-                  </button>
-
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="overflow-hidden mt-3"
+                        className="overflow-hidden mb-4"
                       >
                         <div className="bg-slate-50 rounded-2xl p-4 space-y-2.5 border border-slate-100">
                           {s.detailsAr.map((detail, idx) => (
@@ -139,17 +120,30 @@ export default function ServicesSection({ onOpenBooking }: ServicesSectionProps)
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
 
-                {/* CTA Action overlay visual */}
-                <div className="mt-5 flex items-center justify-between text-xs font-bold text-slate-700 group-hover:text-sky-600 pt-2 transition-colors">
-                  <span className="flex items-center gap-1 font-sans">
-                    <CalendarRange className="w-4 h-4 text-sky-500" />
-                    اضغط لحجز الموعد مباشرة
-                  </span>
-                  <span className="w-8 h-8 rounded-full bg-slate-50 text-slate-400 flex items-center justify-center group-hover:bg-sky-50 group-hover:text-sky-500 transition-all transform group-hover:translate-x-[-4px]">
-                    ←
-                  </span>
+                  {/* Actions Section with touch targets of at least 44px min-height */}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      id={`btn-toggle-service-details-${s.id}`}
+                      type="button"
+                      onClick={() => setExpandedServiceId(prev => (prev === s.id ? null : s.id))}
+                      className="flex-1 min-h-[44px] py-2 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200/60 text-slate-700 hover:text-slate-900 text-xs font-bold rounded-xl flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    >
+                      <Info className="w-4 h-4 text-sky-500" />
+                      <span>{isExpanded ? 'إخفاء المميزات' : 'مميزات الخدمة'}</span>
+                      <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    <button
+                      id={`btn-book-service-${s.id}`}
+                      type="button"
+                      onClick={() => onOpenBooking(s.id)}
+                      className="flex-1 min-h-[44px] py-2 px-4 bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-sm shadow-sky-500/5 cursor-pointer"
+                    >
+                      <CalendarRange className="w-4 h-4" />
+                      <span>احجز الآن</span>
+                    </button>
+                  </div>
                 </div>
 
               </div>

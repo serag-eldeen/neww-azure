@@ -71,3 +71,52 @@ export function getShortPatientId(uuid: string): string {
   // Pad with leading zeros to format as "MR-XXXXXX"
   return `MR-${String(positiveHash).padStart(6, '0')}`;
 }
+
+/**
+ * Checks if the clinic is currently open based on Cairo local time.
+ * Clinic hours: Saturday - Thursday, 2:00 PM to 10:00 PM. Friday is off.
+ */
+export function isClinicOpenNow(): boolean {
+  try {
+    const now = new Date();
+    
+    // Format according to Cairo timezone
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Africa/Cairo',
+      hour12: false,
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric'
+    });
+    
+    const formatted = formatter.formatToParts(now);
+    let weekdayStr = '';
+    let hourVal = 14;
+    let minuteVal = 0;
+    
+    for (const part of formatted) {
+      if (part.type === 'weekday') weekdayStr = part.value;
+      if (part.type === 'hour') hourVal = parseInt(part.value, 10);
+      if (part.type === 'minute') minuteVal = parseInt(part.value, 10);
+    }
+    
+    // Friday is weekend off
+    if (weekdayStr === 'Friday') {
+      return false;
+    }
+    
+    // Working hours: 2:00 PM (14:00) to 10:00 PM (22:00)
+    const currentMinutes = hourVal * 60 + minuteVal;
+    const startMinutes = 14 * 60; // 14:00
+    const endMinutes = 22 * 60; // 22:00
+    
+    return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+  } catch (err) {
+    console.error('Error calculating clinic open state:', err);
+    // Fallback: assume open if between 14:00 and 22:00 in local time
+    const localHour = new Date().getHours();
+    const localDay = new Date().getDay();
+    return localDay !== 5 && localHour >= 14 && localHour < 22;
+  }
+}
+

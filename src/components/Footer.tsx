@@ -69,12 +69,8 @@ export default function Footer({ onOpenBooking, onOpenMyBookings, onOpenAdmin }:
           <div className="md:col-span-2 space-y-3.5">
             <h4 className="text-white font-bold text-sm">بوابة المرضى</h4>
             <div className="flex flex-col gap-2.5 text-xs">
-              <button onClick={onOpenBooking} className="text-right hover:text-sky-400 transition-colors focus:outline-none">حجز موعد استشارة</button>
-              <button onClick={onOpenMyBookings} className="text-right hover:text-sky-400 transition-colors focus:outline-none">استعراض حوزاتي النشطة</button>
-              <button onClick={onOpenAdmin} className="text-right hover:text-sky-400 transition-colors focus:outline-none flex items-center justify-start gap-1">
-                <span>بوابة الإدارة</span>
-                <span className="px-1 py-0.5 bg-slate-900 rounded text-[9px] text-sky-400 font-bold border border-slate-800">خاص</span>
-              </button>
+              <button onClick={onOpenBooking} className="text-right hover:text-sky-400 transition-colors focus:outline-none cursor-pointer">حجز موعد استشارة</button>
+              <button onClick={onOpenMyBookings} className="text-right hover:text-sky-400 transition-colors focus:outline-none cursor-pointer">استعراض حوزاتي النشطة</button>
               <a href={`https://wa.me/${CLINIC_CONTACT.whatsapp}`} target="_blank" rel="noreferrer" className="hover:text-sky-400 transition-colors">استشارة واتساب عاجلة</a>
             </div>
           </div>
@@ -145,7 +141,16 @@ export default function Footer({ onOpenBooking, onOpenMyBookings, onOpenAdmin }:
             <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
             <span>لصالح عيادة Azure Dental Clinic © {currentYear}</span>
           </div>
-          <p className="font-mono text-[10px]">PREMIUM LUXURY HEALTHCARE SYSTEM</p>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={onOpenAdmin} 
+              className="text-slate-800 hover:text-slate-500 font-mono text-[9px] cursor-pointer focus:outline-none transition-colors"
+              title="بوابة إدارة العيادة السرية"
+            >
+              [بوابة الإدارة]
+            </button>
+            <p className="font-mono text-[10px]">PREMIUM LUXURY HEALTHCARE SYSTEM</p>
+          </div>
         </div>
 
       </div>
